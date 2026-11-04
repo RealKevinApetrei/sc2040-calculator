@@ -1,7 +1,7 @@
 {
   "name": "sc2040-calculator",
   "productName": "SC2040 Calculator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Classroom emulator of the Rebell SC2040 scientific calculator for Mac and Windows",
   "main": "main.js",
   "author": "Kevin Apetrei",

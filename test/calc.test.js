@@ -170,3 +170,14 @@ test('power off and on keeps memory', () => {
   assert.strictEqual(c.vars.A, 9);
   assert.strictEqual(bottom(c), '0.');
 });
+
+test('fraction answers carry stacked parts for the display', () => {
+  const c = run('2 frac 1 frac 3 add 1 frac 4 eq');
+  assert.deepStrictEqual(c.display().bottom.frac, { neg: false, whole: '2', num: '7', den: '12' });
+  run('shift frac', c);
+  assert.deepStrictEqual(c.display().bottom.frac, { neg: false, whole: '', num: '31', den: '12' });
+  const d = run('neg 1 frac 3 eq');
+  assert.deepStrictEqual(d.display().bottom.frac, { neg: true, whole: '', num: '1', den: '3' });
+  run('frac', d);
+  assert.strictEqual(d.display().bottom.frac, undefined);
+});

@@ -7,6 +7,7 @@
   const W = 300, H = 100; // logical LCD size
   const INK = '#1a1e16';
   const GHOST = 'rgba(26,30,22,0.028)';
+  const GHOST_DOT = 'rgba(26,30,22,0.012)'; // dot matrix is dense, so fainter
 
   // Indicator row (label, key in display().ind, x)
   const INDICATORS = [
@@ -93,7 +94,7 @@
       const text = (top && top.text) || '';
       // ghost dots for authenticity
       if (pass === 1) {
-        c.fillStyle = GHOST;
+        c.fillStyle = GHOST_DOT;
         for (let i = 0; i < 12; i++) {
           for (let r = 0; r < 7; r++) for (let col = 0; col < 5; col++) c.fillRect(x0 + i * cellW + col * p, y0 + r * p, dot, dot);
         }
@@ -119,6 +120,7 @@
 
     drawBottom(c, b, comma, pass) {
       const x0 = 8, y0 = 50, dw = 17.5, dh = 37, pitch = 21.4;
+      if (b && b.frac) return this.drawFraction(c, b.frac, x0, y0, dw, dh, pitch);
       // ghost 8s
       if (pass === 1) {
         for (let i = 1; i < 11; i++) this.digit(c, x0 + i * pitch, y0, dw, dh, '8', GHOST);
@@ -145,6 +147,40 @@
       }
     }
 
+    // Fraction answer drawn as a real stacked fraction (whole part full size,
+    // numerator over a bar over denominator), right-aligned on the answer line.
+    drawFraction(c, f, x0, y0, dw, dh, pitch) {
+      // Fraction block is taller than the digits and centred on them, so the
+      // numerator and denominator stay readable on a projector.
+      const sw = 13, sh = 20, sp = 16.5; // small digit width, height, pitch
+      const mid = y0 + dh / 2, bh = 2.6;
+      const right = x0 + 11 * pitch - 1;
+      const cols = Math.max(f.num.length, f.den.length);
+      const fw = cols * sp - (sp - sw);
+      const fx = right - fw;
+      const rowX = (s) => fx + (fw - (s.length * sp - (sp - sw))) / 2;
+      const ny = mid - bh / 2 - 1.3 - sh, dy = mid + bh / 2 + 1.3;
+      Array.from(f.num).forEach((ch, i) => this.digit(c, rowX(f.num) + i * sp, ny, sw, sh, ch, INK));
+      Array.from(f.den).forEach((ch, i) => this.digit(c, rowX(f.den) + i * sp, dy, sw, sh, ch, INK));
+      // fraction bar, sheared to match the italic digits
+      const by = mid - bh / 2, k = 0.09;
+      const sx = (yy) => (y0 + dh - yy) * k;
+      c.fillStyle = INK;
+      c.beginPath();
+      c.moveTo(fx - 1.5 + sx(by), by);
+      c.lineTo(fx + fw + 1.5 + sx(by), by);
+      c.lineTo(fx + fw + 1.5 + sx(by + bh), by + bh);
+      c.lineTo(fx - 1.5 + sx(by + bh), by + bh);
+      c.closePath();
+      c.fill();
+      const wx = fx - 9 - f.whole.length * pitch + (pitch - dw);
+      Array.from(f.whole).forEach((ch, i) => this.digit(c, wx + i * pitch, y0, dw, dh, ch, INK));
+      if (f.neg) {
+        const lead = f.whole ? wx : fx;
+        this.seg(c, lead - 6 - dw * 0.8, y0, dw * 0.8, dh, 'g', INK);
+      }
+    }
+
     digit(c, x, y, w, h, ch, color) {
       this.seg(c, x, y, w, h, SEGS[ch] !== undefined ? SEGS[ch] : '', color);
     }
@@ -152,7 +188,7 @@
     // Draw italic 7-segment segments.
     seg(c, x, y, w, h, list, color) {
       if (!list) return;
-      const t = Math.max(1.4, w * 0.17); // thickness
+      const t = Math.max(1.8, w * 0.19); // thickness
       const g = t * 0.22; // gap
       const slant = 0.09;
       const hm = h / 2;

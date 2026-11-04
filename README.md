@@ -39,7 +39,7 @@ The app is free and not signed with a paid Apple or Microsoft certificate, so ea
 
 - Two-line display: the calculation on top (dot-matrix), the answer below (10 digits plus a 2-digit exponent)
 - **COMP** mode: + − × ÷, brackets, implied multiplication, x², x³, x⁻¹, √, ³√, ˣ√, ^, log, ln, 10ˣ, eˣ, sin/cos/tan and their inverses, hyperbolic functions, x!, nPr, nCr, π, Ran#, Rnd, %, EXP
-- **Fractions** (a b/c and d/c), with switching between fraction and decimal answers
+- **Fractions** (a b/c and d/c): answers are shown as a stacked fraction (whole number, numerator over denominator), with switching between fraction and decimal answers
 - **Degrees-minutes-seconds** (°′″) input and display
 - **Angle units:** Deg, Rad, Gra, and DRG▶ conversion
 - **Display formats:** Norm 1/2, Fix 0–9, Sci 0–9, ENG and ←ENG

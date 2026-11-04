@@ -815,7 +815,13 @@
       if (!b) out.bottom = numBottom(0);
       else if (v && v.kind === 'frac') {
         const neg = v.rat.n < 0n;
-        out.bottom = E.toCells({ neg, mant: E.fracText(v.rat, v.improper), exp: null });
+        const mant = E.fracText(v.rat, v.improper);
+        out.bottom = E.toCells({ neg, mant, exp: null });
+        // Parts for the stacked rendering: whole, numerator, denominator.
+        const p = mant.split('┘');
+        out.bottom.frac = p.length === 3
+          ? { neg, whole: p[0], num: p[1], den: p[2] }
+          : { neg, whole: '', num: p[0], den: p[1] };
       } else if (v && v.kind === 'dms') out.bottom = E.toCells(E.formatDMS(b.value));
       else if (v && v.kind === 'eng') out.bottom = E.toCells(E.formatEng(b.value, v.eng));
       else out.bottom = numBottom(b.value);
