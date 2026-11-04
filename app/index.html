@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>SC2040 Calculator</title>
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage">
+    <div class="calc" role="application" aria-label="SC2040 scientific calculator">
+      <div class="bezel">
+        <canvas id="lcd" aria-label="Calculator display"></canvas>
+      </div>
+
+      <div class="brand">
+        <span class="logo">Rebell<sup>®</sup></span>
+        <span class="model">SC2040</span>
+      </div>
+      <div class="badge-row">
+        <span class="badge"><b>SCIENTIFIC</b><i>calculator</i></span>
+      </div>
+
+      <div class="top-keys">
+        <div class="top-side" id="top-left"></div>
+        <div class="dpad-wrap">
+          <div class="dpad">
+            <button type="button" class="dp dp-up" data-k="up" aria-label="Up"><i></i></button>
+            <button type="button" class="dp dp-left" data-k="left" aria-label="Left"><i></i></button>
+            <button type="button" class="dp dp-right" data-k="right" aria-label="Right"><i></i></button>
+            <button type="button" class="dp dp-down" data-k="down" aria-label="Down"><i></i></button>
+            <span class="replay">REPLAY</span>
+          </div>
+        </div>
+        <div class="top-side" id="top-right"></div>
+      </div>
+
+      <div class="fn-keys" id="fn-keys"></div>
+      <div class="num-keys" id="num-keys"></div>
+    </div>
+
+    <aside class="trail" aria-label="Key presses">
+      <div class="trail-head">
+        <span>Key presses</span>
+        <button type="button" id="trail-clear">Clear</button>
+      </div>
+      <div class="trail-list" id="trail-list"></div>
+      <p class="trail-empty" id="trail-empty">Keys you press appear here, so students can follow along.</p>
+    </aside>
+  </main>
+
+  <nav class="toolbar" aria-label="App controls">
+    <button type="button" id="btn-trail" title="Show or hide key presses">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h1M10.5 10h1M14.5 10h1M8 14h8"/></svg>
+      <span>Keys</span>
+    </button>
+    <button type="button" id="btn-full" title="Full screen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+      <span>Full screen</span>
+    </button>
+    <button type="button" id="btn-help" title="Help and keyboard shortcuts (?)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.4M12 16.8v.2"/></svg>
+      <span>Help</span>
+    </button>
+  </nav>
+
+  <div class="help" id="help" hidden>
+    <div class="help-card" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="help-head">
+        <h2 id="help-title">How to use</h2>
+        <button type="button" id="help-close" aria-label="Close">✕</button>
+      </div>
+      <div class="help-body">
+        <section>
+          <h3>Second functions</h3>
+          <p>Press <kbd class="g">SHIFT</kbd> then a key for the <span class="gold">gold</span> label above it. Press <kbd class="r">ALPHA</kbd> for the <span class="red">red</span> letter (memory A–F, X, Y, M).</p>
+        </section>
+        <section>
+          <h3>Modes</h3>
+          <table>
+            <tr><td><kbd>MODE</kbd></td><td>1 COMP (normal) · 2 SD (statistics) · 3 REG (regression)</td></tr>
+            <tr><td><kbd>MODE</kbd> ×2</td><td>1 Deg · 2 Rad · 3 Gra</td></tr>
+            <tr><td><kbd>MODE</kbd> ×3</td><td>1 Fix · 2 Sci · 3 Norm (then a digit)</td></tr>
+            <tr><td><kbd>MODE</kbd> ×4</td><td>Disp: a b/c or d/c fractions, Dot or Comma</td></tr>
+            <tr><td><kbd class="g">SHIFT</kbd> <kbd>MODE</kbd></td><td>CLR: 1 Memory · 2 Mode · 3 All</td></tr>
+          </table>
+        </section>
+        <section>
+          <h3>Handy keys</h3>
+          <table>
+            <tr><td><kbd>a<sup>b</sup>/<sub>c</sub></kbd></td><td>Type a fraction. After <kbd>=</kbd>, switches fraction ↔ decimal</td></tr>
+            <tr><td><kbd>°′″</kbd></td><td>Degrees-minutes-seconds. After <kbd>=</kbd>, shows the answer in DMS</td></tr>
+            <tr><td><kbd>REPLAY</kbd></td><td>▲▼ earlier calculations · ◀▶ edit the last one</td></tr>
+            <tr><td><kbd class="g">SHIFT</kbd> <kbd>DEL</kbd></td><td>Insert mode (otherwise typing overwrites)</td></tr>
+            <tr><td><kbd class="g">SHIFT</kbd> <kbd>RCL</kbd></td><td>STO: save the answer into A–F, X, Y or M</td></tr>
+          </table>
+        </section>
+        <section>
+          <h3>Statistics (SD / REG)</h3>
+          <p>Enter each value and press <kbd>M+</kbd>. In REG mode type <code>x , y</code> then <kbd>M+</kbd>. Add a frequency with <kbd class="g">SHIFT</kbd> <kbd>,</kbd> (<code>;</code>). Results: <kbd class="g">SHIFT</kbd> <kbd>1</kbd> S-SUM, <kbd class="g">SHIFT</kbd> <kbd>2</kbd> S-VAR (use ▶ for more pages). ▲▼ browses the data.</p>
+        </section>
+        <section>
+          <h3>Laptop keyboard</h3>
+          <table class="kb">
+            <tr><td>0–9 . + − * / ^ ( )</td><td colspan="3">as labelled</td></tr>
+            <tr><td>Enter</td><td>=</td><td>Backspace</td><td>DEL</td></tr>
+            <tr><td>Esc</td><td>AC</td><td>Arrows</td><td>REPLAY</td></tr>
+            <tr><td>tap Shift</td><td>SHIFT</td><td>tap Alt/Option</td><td>ALPHA</td></tr>
+            <tr><td>s c t</td><td>sin cos tan</td><td>h</td><td>hyp</td></tr>
+            <tr><td>l n</td><td>log ln</td><td>r q</td><td>√ x²</td></tr>
+            <tr><td>f</td><td>a b/c</td><td>d</td><td>°′″</td></tr>
+            <tr><td>p !</td><td>π x!</td><td>%</td><td>%</td></tr>
+            <tr><td>e a</td><td>EXP Ans</td><td>m o</td><td>M+ MODE</td></tr>
+          </table>
+        </section>
+        <p class="fine">Unofficial classroom emulator. Not affiliated with or endorsed by Rebell.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="font5x7.js"></script>
+  <script src="engine.js"></script>
+  <script src="calc.js"></script>
+  <script src="lcd.js"></script>
+  <script src="ui.js"></script>
+</body>
+</html>

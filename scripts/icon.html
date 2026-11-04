@@ -1,0 +1,17 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1024px;height:1024px;background:transparent;overflow:hidden}
+.tile{position:absolute;left:100px;top:100px;width:824px;height:824px;border-radius:185px;
+  background:linear-gradient(180deg,#3a3c41,#1b1c1f 60%,#121314);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.14),inset 0 -6px 12px rgba(0,0,0,.6),0 16px 30px rgba(0,0,0,.35)}
+.lcd{position:absolute;left:112px;right:112px;top:104px;height:210px;border-radius:26px;
+  background:linear-gradient(176deg,#d3dac4,#b9c1a6);box-shadow:inset 0 5px 12px rgba(0,0,0,.35),0 0 0 14px #45484e}
+.lcd span{position:absolute;right:40px;bottom:22px;font:italic 600 150px/1 "DIN Alternate","Helvetica Neue",Arial,sans-serif;color:#1a1e16;letter-spacing:4px}
+.keys{position:absolute;left:112px;right:112px;top:380px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px 30px}
+.k{height:118px;border-radius:24px 24px 30px 30px;background:linear-gradient(180deg,#eceef1,#b8bcc3);box-shadow:0 8px 0 #5f636a}
+.r{background:linear-gradient(180deg,#f27d8d,#c83a50);box-shadow:0 8px 0 #7c1f2d}
+</style></head><body>
+<div class="tile"><div class="lcd"><span>2040</span></div>
+<div class="keys"><div class="k"></div><div class="k"></div><div class="k"></div><div class="k r"></div>
+<div class="k"></div><div class="k"></div><div class="k"></div><div class="k r"></div></div></div>
+</body></html>

@@ -1,0 +1,84 @@
+{
+  "name": "sc2040-calculator",
+  "productName": "SC2040 Calculator",
+  "version": "1.0.0",
+  "description": "Classroom emulator of the Rebell SC2040 scientific calculator for Mac and Windows",
+  "main": "main.js",
+  "author": "Kevin Apetrei",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^45.2.2",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.realkevinapetrei.sc2040",
+    "productName": "SC2040 Calculator",
+    "artifactName": "SC2040-Calculator-${version}-${os}-${arch}.${ext}",
+    "files": [
+      "main.js",
+      "app/**/*"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.education",
+      "icon": "build/icon.png",
+      "identity": "-",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "hardenedRuntime": false
+    },
+    "dmg": {
+      "title": "SC2040 Calculator"
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "SC2040 Calculator",
+      "artifactName": "SC2040-Calculator-${version}-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "SC2040-Calculator-${version}-Portable.${ext}"
+    }
+  }
+}
